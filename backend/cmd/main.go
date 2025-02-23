@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"finance/internal/handlers"
 	"finance/internal/db"
+	"finance/internal/middleware"
 )
 
 func corsMiddleware(next http.Handler) http.Handler {
@@ -36,10 +37,18 @@ func main() {
 
 	r := mux.NewRouter()
 	
-	authHandler := handlers.NewAuthHandler("your-secret-key")
+	jwtSecret := []byte("your-secret-key")
+	authHandler := handlers.NewAuthHandler(string(jwtSecret))
+	transactionHandler := handlers.NewTransactionHandler()
 
 	r.HandleFunc("/api/auth/login", authHandler.Login).Methods("POST", "OPTIONS")
 	r.HandleFunc("/api/auth/register", authHandler.Register).Methods("POST", "OPTIONS")
+
+	api := r.PathPrefix("/api").Subrouter()
+	api.Use(middleware.AuthMiddleware(jwtSecret))
+
+	api.HandleFunc("/transactions", transactionHandler.Create).Methods("POST", "OPTIONS")
+	api.HandleFunc("/transactions", transactionHandler.List).Methods("GET", "OPTIONS")
 
 	r.Use(corsMiddleware)
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import 'transaction_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -19,16 +20,25 @@ class AuthScreenState extends State<AuthScreen> {
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       try {
+        String token;
         if (_isLogin) {
-          await _authService.login(
+          token = await _authService.login(
             _emailController.text,
             _passwordController.text,
           );
         } else {
-          await _authService.register(
+          token = await _authService.register(
             _emailController.text,
             _passwordController.text,
             _nameController.text,
+          );
+        }
+        
+        if (mounted) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => TransactionScreen(token: token),
+            ),
           );
         }
       } catch (e) {
