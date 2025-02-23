@@ -13,11 +13,21 @@ class Category {
   });
 
   factory Category.fromJson(Map<String, dynamic> json) {
-    return Category(
-      id: json['id'],
-      name: json['name'],
-      type: json['type'],
+    print('Parsing category JSON: $json'); // Для отладки
+    final category = Category(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      type: (json['type'] as String).toLowerCase().trim(),
     );
+    print('Created category: id=${category.id}, name=${category.name}, type=${category.type}'); // Для отладки
+    return category;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'type': type,
+    };
   }
 }
 
@@ -28,6 +38,7 @@ class CategoryService {
   CategoryService(this.token);
 
   Future<List<Category>> getCategories() async {
+    print('Getting categories...'); // Для отладки
     final response = await http.get(
       Uri.parse('$baseUrl/categories'),
       headers: {
@@ -35,11 +46,18 @@ class CategoryService {
       },
     );
 
+    print('Get categories response: ${response.statusCode} - ${response.body}'); // Для отладки
+
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-      return data.map((json) => Category.fromJson(json)).toList();
+      final categories = data.map((json) => Category.fromJson(json)).toList();
+      print('Parsed ${categories.length} categories:'); // Для отладки
+      for (var category in categories) {
+        print('Category: id=${category.id}, name=${category.name}, type=${category.type}');
+      }
+      return categories;
     } else {
-      throw Exception('Failed to load categories');
+      throw Exception('Failed to load categories: ${response.body}');
     }
   }
 
@@ -56,10 +74,12 @@ class CategoryService {
       }),
     );
 
+    print('Create category response: ${response.statusCode} - ${response.body}'); // Для отладки
+
     if (response.statusCode == 200) {
       return Category.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Failed to create category');
+      throw Exception('Failed to create category: ${response.body}');
     }
   }
 } 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/transaction_service.dart';
 import '../services/category_service.dart';
 import 'category_screen.dart';
+import 'budget_screen.dart';
 
 class TransactionScreen extends StatefulWidget {
   final String token;
@@ -96,6 +97,17 @@ class TransactionScreenState extends State<TransactionScreen> {
                   builder: (context) => CategoryScreen(token: widget.token),
                 ),
               ).then((_) => _loadData());
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.account_balance_wallet),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BudgetScreen(token: widget.token),
+                ),
+              );
             },
           ),
           IconButton(

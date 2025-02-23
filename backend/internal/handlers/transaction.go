@@ -5,6 +5,7 @@ import (
 	"finance/internal/models"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
+	"time"
 )
 
 type TransactionHandler struct{}
@@ -34,6 +35,23 @@ func (h *TransactionHandler) Create(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Could not create transaction", http.StatusInternalServerError)
 		return
+	}
+
+	// Обновляем бюджеты, если транзакция относится к категории расходов
+	if req.Type == "expense" && req.CategoryID != nil {
+		budgets, err := models.GetActiveBudgetsForCategory(userID, *req.CategoryID, time.Now())
+		if err != nil {
+			http.Error(w, "Could not get budgets", http.StatusInternalServerError)
+			return
+		}
+
+		for _, budget := range budgets {
+			newSpent := budget.Spent + req.Amount
+			if err := models.UpdateBudgetSpent(budget.ID, newSpent); err != nil {
+				http.Error(w, "Could not update budget", http.StatusInternalServerError)
+				return
+			}
+		}
 	}
 
 	json.NewEncoder(w).Encode(transaction)
