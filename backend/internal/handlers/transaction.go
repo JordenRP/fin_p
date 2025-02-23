@@ -11,6 +11,7 @@ type TransactionHandler struct{}
 
 type CreateTransactionRequest struct {
 	Amount      float64 `json:"amount"`
+	CategoryID  *uint   `json:"category_id,omitempty"`
 	Type        string  `json:"type"`
 	Description string  `json:"description"`
 }
@@ -29,7 +30,7 @@ func (h *TransactionHandler) Create(w http.ResponseWriter, r *http.Request) {
 	claims := r.Context().Value("claims").(jwt.MapClaims)
 	userID := uint(claims["user_id"].(float64))
 
-	transaction, err := models.CreateTransaction(userID, req.Amount, req.Type, req.Description)
+	transaction, err := models.CreateTransaction(userID, req.CategoryID, req.Amount, req.Type, req.Description)
 	if err != nil {
 		http.Error(w, "Could not create transaction", http.StatusInternalServerError)
 		return

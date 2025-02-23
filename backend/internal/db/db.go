@@ -39,9 +39,16 @@ func createTables() error {
             password VARCHAR(255) NOT NULL,
             name VARCHAR(255) NOT NULL
         )`,
+        `CREATE TABLE IF NOT EXISTS categories (
+            id SERIAL PRIMARY KEY,
+            user_id INTEGER REFERENCES users(id),
+            name VARCHAR(255) NOT NULL,
+            type VARCHAR(50) NOT NULL
+        )`,
         `CREATE TABLE IF NOT EXISTS transactions (
             id SERIAL PRIMARY KEY,
             user_id INTEGER REFERENCES users(id),
+            category_id INTEGER REFERENCES categories(id),
             amount DECIMAL(10,2) NOT NULL,
             type VARCHAR(50) NOT NULL,
             description TEXT,
