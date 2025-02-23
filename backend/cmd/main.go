@@ -46,6 +46,7 @@ func main() {
 	transactionHandler := handlers.NewTransactionHandler()
 	categoryHandler := handlers.NewCategoryHandler()
 	budgetHandler := handlers.NewBudgetHandler()
+	statisticsHandler := handlers.NewStatisticsHandler()
 
 	r.HandleFunc("/api/auth/login", authHandler.Login).Methods("POST", "OPTIONS")
 	r.HandleFunc("/api/auth/register", authHandler.Register).Methods("POST", "OPTIONS")
@@ -62,6 +63,8 @@ func main() {
 	api.HandleFunc("/budgets", budgetHandler.Create).Methods("POST", "OPTIONS")
 	api.HandleFunc("/budgets", budgetHandler.List).Methods("GET", "OPTIONS")
 	api.HandleFunc("/budgets/{id}", budgetHandler.Delete).Methods("DELETE", "OPTIONS")
+
+	api.HandleFunc("/statistics", statisticsHandler.GetStatistics).Methods("POST", "OPTIONS")
 
 	log.Println("Server starting on port 8080...")
 	if err := http.ListenAndServe(":8080", r); err != nil {
