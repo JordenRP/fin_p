@@ -1,5 +1,5 @@
-name: todo_app
-description: A todo application
+name: finance
+description: A finance application
 publish_to: 'none'
 
 version: 1.0.0+1

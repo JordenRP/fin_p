@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 	"github.com/gorilla/mux"
-	"todo-app/internal/handlers"
-	"todo-app/internal/db"
+	"finance/internal/handlers"
+	"finance/internal/db"
 )
 
 func corsMiddleware(next http.Handler) http.Handler {

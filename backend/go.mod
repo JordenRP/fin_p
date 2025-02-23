@@ -1,4 +1,4 @@
-module todo-app
+module finance
 
 go 1.22
 
