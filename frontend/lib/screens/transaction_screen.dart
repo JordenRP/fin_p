@@ -4,6 +4,7 @@ import '../services/category_service.dart';
 import 'category_screen.dart';
 import 'budget_screen.dart';
 import 'statistics_screen.dart';
+import 'export_screen.dart';
 
 class TransactionScreen extends StatefulWidget {
   final String token;
@@ -118,6 +119,17 @@ class TransactionScreenState extends State<TransactionScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => StatisticsScreen(token: widget.token),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.download),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ExportScreen(token: widget.token),
                 ),
               );
             },

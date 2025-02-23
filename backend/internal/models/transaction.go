@@ -72,4 +72,31 @@ func GetUserTransactions(userID uint) ([]Transaction, error) {
 		transactions = append(transactions, t)
 	}
 	return transactions, nil
+}
+
+func GetUserTransactionsInRange(userID uint, startDate, endDate time.Time) ([]Transaction, error) {
+	rows, err := db.DB.Query(
+		"SELECT id, user_id, category_id, amount, type, description, date FROM transactions WHERE user_id = $1 AND date BETWEEN $2 AND $3 ORDER BY date DESC",
+		userID, startDate, endDate,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var transactions []Transaction
+	for rows.Next() {
+		var t Transaction
+		var categoryID sql.NullInt64
+		err := rows.Scan(&t.ID, &t.UserID, &categoryID, &t.Amount, &t.Type, &t.Description, &t.Date)
+		if err != nil {
+			return nil, err
+		}
+		if categoryID.Valid {
+			catID := uint(categoryID.Int64)
+			t.CategoryID = &catID
+		}
+		transactions = append(transactions, t)
+	}
+	return transactions, nil
 } 
