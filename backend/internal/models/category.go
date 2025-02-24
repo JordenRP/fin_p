@@ -1,6 +1,7 @@
 package models
 
 import (
+<<<<<<< HEAD
     "time"
     "todo-app/internal/db"
 )
@@ -40,14 +41,46 @@ func CreateCategory(name string, userID uint) (*Category, error) {
         return nil, err
     }
     return &category, nil
+=======
+    "finance/internal/db"
+)
+
+type Category struct {
+    ID     uint   `json:"id"`
+    UserID uint   `json:"user_id"`
+    Name   string `json:"name"`
+    Type   string `json:"type"`
+}
+
+func CreateCategory(userID uint, name, categoryType string) (*Category, error) {
+    var id uint
+    err := db.DB.QueryRow(
+        "INSERT INTO categories (user_id, name, type) VALUES ($1, $2, $3) RETURNING id",
+        userID, name, categoryType,
+    ).Scan(&id)
+    if err != nil {
+        return nil, err
+    }
+
+    return &Category{
+        ID:     id,
+        UserID: userID,
+        Name:   name,
+        Type:   categoryType,
+    }, nil
+>>>>>>> my-feature-branch
 }
 
 func GetUserCategories(userID uint) ([]Category, error) {
     rows, err := db.DB.Query(
+<<<<<<< HEAD
         `SELECT id, name, user_id, created_at 
          FROM categories 
          WHERE user_id = $1 
          ORDER BY created_at DESC`,
+=======
+        "SELECT id, user_id, name, type FROM categories WHERE user_id = $1",
+>>>>>>> my-feature-branch
         userID,
     )
     if err != nil {
@@ -57,6 +90,7 @@ func GetUserCategories(userID uint) ([]Category, error) {
 
     var categories []Category
     for rows.Next() {
+<<<<<<< HEAD
         var category Category
         err := rows.Scan(&category.ID, &category.Name, &category.UserID, &category.CreatedAt)
         if err != nil {
@@ -144,4 +178,14 @@ func UpdateTaskCategory(taskID, categoryID, userID uint) error {
     }
 
     return nil
+=======
+        var c Category
+        err := rows.Scan(&c.ID, &c.UserID, &c.Name, &c.Type)
+        if err != nil {
+            return nil, err
+        }
+        categories = append(categories, c)
+    }
+    return categories, nil
+>>>>>>> my-feature-branch
 } 

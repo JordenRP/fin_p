@@ -1,7 +1,7 @@
 package models
 
 import (
-    "todo-app/internal/db"
+    "finance/internal/db"
     "golang.org/x/crypto/bcrypt"
 )
 

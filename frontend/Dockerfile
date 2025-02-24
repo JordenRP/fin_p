@@ -6,8 +6,7 @@ COPY . .
 
 RUN flutter config --enable-web \
     && flutter create . --platforms web \
-    && flutter pub get \
-    && flutter build web
+    && flutter pub get
 
 EXPOSE 3000
 

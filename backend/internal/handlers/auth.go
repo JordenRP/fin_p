@@ -5,7 +5,7 @@ import (
     "net/http"
     "github.com/golang-jwt/jwt/v5"
     "time"
-    "todo-app/internal/models"
+    "finance/internal/models"
 )
 
 type AuthHandler struct {

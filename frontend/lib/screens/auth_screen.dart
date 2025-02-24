@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import 'transaction_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -32,8 +33,18 @@ class AuthScreenState extends State<AuthScreen> {
             _nameController.text,
           );
         }
+<<<<<<< HEAD
         if (mounted && token.isNotEmpty) {
           Navigator.pushReplacementNamed(context, '/tasks');
+=======
+        
+        if (mounted) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => TransactionScreen(token: token),
+            ),
+          );
+>>>>>>> my-feature-branch
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(

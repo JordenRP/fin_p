@@ -6,7 +6,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=todoapp
+      - POSTGRES_DB=finance
     ports:
       - "5432:5432"
     volumes:
@@ -31,7 +31,7 @@ services:
       - DB_HOST=postgres
       - DB_USER=postgres
       - DB_PASSWORD=postgres
-      - DB_NAME=todoapp
+      - DB_NAME=finance
       - DB_PORT=5432
       - CORS_ORIGIN=http://localhost:3000
     logging:

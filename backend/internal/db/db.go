@@ -46,6 +46,7 @@ func createTables() error {
         )`,
         `CREATE TABLE IF NOT EXISTS categories (
             id SERIAL PRIMARY KEY,
+<<<<<<< HEAD
             name VARCHAR(255) NOT NULL,
             user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
             created_at TIMESTAMP NOT NULL DEFAULT NOW()
@@ -69,6 +70,29 @@ func createTables() error {
             message TEXT NOT NULL,
             created_at TIMESTAMP NOT NULL,
             read BOOLEAN DEFAULT FALSE
+=======
+            user_id INTEGER REFERENCES users(id),
+            name VARCHAR(255) NOT NULL,
+            type VARCHAR(50) NOT NULL
+        )`,
+        `CREATE TABLE IF NOT EXISTS transactions (
+            id SERIAL PRIMARY KEY,
+            user_id INTEGER REFERENCES users(id),
+            category_id INTEGER REFERENCES categories(id),
+            amount DECIMAL(10,2) NOT NULL,
+            type VARCHAR(50) NOT NULL,
+            description TEXT,
+            date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )`,
+        `CREATE TABLE IF NOT EXISTS budgets (
+            id SERIAL PRIMARY KEY,
+            user_id INTEGER REFERENCES users(id),
+            category_id INTEGER REFERENCES categories(id),
+            amount DECIMAL(10,2) NOT NULL,
+            spent DECIMAL(10,2) NOT NULL DEFAULT 0,
+            start_date TIMESTAMP NOT NULL,
+            end_date TIMESTAMP NOT NULL
+>>>>>>> my-feature-branch
         )`,
     }
 
@@ -78,6 +102,7 @@ func createTables() error {
             return err
         }
     }
+<<<<<<< HEAD
     return nil
 }
 
@@ -133,6 +158,8 @@ func migrateExistingData() error {
             return err
         }
     }
+=======
+>>>>>>> my-feature-branch
 
     return nil
 } 

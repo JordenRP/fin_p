@@ -5,11 +5,17 @@ import (
 	"net/http"
 	"os"
 	"github.com/gorilla/mux"
+<<<<<<< HEAD
 	"todo-app/internal/handlers"
 	"todo-app/internal/db"
 	"todo-app/internal/middleware"
 	"time"
 	"todo-app/internal/models"
+=======
+	"finance/internal/handlers"
+	"finance/internal/db"
+	"finance/internal/middleware"
+>>>>>>> my-feature-branch
 )
 
 func corsMiddleware(next http.Handler) http.Handler {
@@ -18,11 +24,16 @@ func corsMiddleware(next http.Handler) http.Handler {
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
+<<<<<<< HEAD
 		
+=======
+
+>>>>>>> my-feature-branch
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
 			return
 		}
+
 		next.ServeHTTP(w, r)
 	})
 }
@@ -44,13 +55,22 @@ func main() {
 	
 	jwtSecret := []byte("your-secret-key")
 	authHandler := handlers.NewAuthHandler(string(jwtSecret))
+<<<<<<< HEAD
 	taskHandler := handlers.NewTaskHandler()
 	notificationHandler := handlers.NewNotificationHandler()
 	categoryHandler := handlers.NewCategoryHandler()
+=======
+	transactionHandler := handlers.NewTransactionHandler()
+	categoryHandler := handlers.NewCategoryHandler()
+	budgetHandler := handlers.NewBudgetHandler()
+	statisticsHandler := handlers.NewStatisticsHandler()
+	exportHandler := handlers.NewExportHandler()
+>>>>>>> my-feature-branch
 
 	r.HandleFunc("/api/auth/login", authHandler.Login).Methods("POST", "OPTIONS")
 	r.HandleFunc("/api/auth/register", authHandler.Register).Methods("POST", "OPTIONS")
 
+<<<<<<< HEAD
 	taskRouter := r.PathPrefix("/api/tasks").Subrouter()
 	taskRouter.Use(middleware.AuthMiddleware(jwtSecret))
 	taskRouter.HandleFunc("", taskHandler.Create).Methods("POST", "OPTIONS")
@@ -80,6 +100,24 @@ func main() {
 			}
 		}
 	}()
+=======
+	api := r.PathPrefix("/api").Subrouter()
+	api.Use(middleware.AuthMiddleware(jwtSecret))
+
+	api.HandleFunc("/transactions", transactionHandler.Create).Methods("POST", "OPTIONS")
+	api.HandleFunc("/transactions", transactionHandler.List).Methods("GET", "OPTIONS")
+
+	api.HandleFunc("/categories", categoryHandler.Create).Methods("POST", "OPTIONS")
+	api.HandleFunc("/categories", categoryHandler.List).Methods("GET", "OPTIONS")
+
+	api.HandleFunc("/budgets", budgetHandler.Create).Methods("POST", "OPTIONS")
+	api.HandleFunc("/budgets", budgetHandler.List).Methods("GET", "OPTIONS")
+	api.HandleFunc("/budgets/{id}", budgetHandler.Delete).Methods("DELETE", "OPTIONS")
+
+	api.HandleFunc("/statistics", statisticsHandler.GetStatistics).Methods("POST", "OPTIONS")
+
+	api.HandleFunc("/export/transactions", exportHandler.ExportTransactions).Methods("POST", "OPTIONS")
+>>>>>>> my-feature-branch
 
 	log.Println("Server starting on port 8080...")
 	if err := http.ListenAndServe(":8080", r); err != nil {
